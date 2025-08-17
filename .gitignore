@@ -1,0 +1,43 @@
+# =========================
+# Ignorar datasets grandes
+# =========================
+dataset/
+dataset_bin/
+dataset_maize_only/
+pruebas/
+
+# =========================
+# Checkpoints y modelos
+# =========================
+*.pth
+*.pt
+
+# =========================
+# Resultados / métricas
+# =========================
+*.csv
+*.png
+
+# =========================
+# Entornos virtuales
+# =========================
+venv/
+.env/
+.venv/
+
+# =========================
+# Archivos temporales / caché
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.tmp
+*.log
+
+# =========================
+# Configuración local
+# =========================
+*.swp
+.DS_Store
+Thumbs.db
