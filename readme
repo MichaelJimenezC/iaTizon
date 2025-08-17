@@ -1,0 +1,9 @@
+python -m src.main --data_dir "C:\dev\dataset_bin" --device cuda --ckpt stage1_maize_not_v3.pth
+python -m src.compute_tau --data_dir "C:\dev\dataset_bin" --ckpt stage1_maize_not_v3.pth --device cuda
+python -m src.infer ^
+  --data_dir "C:\dev\dataset_bin" ^
+  --ckpt stage1_maize_not_v3.pth ^
+  --device cuda ^
+  --dir "C:\dev\pruebas" ^
+  --out_csv "C:\dev\preds_soy.csv" ^
+  --tau 0.272
