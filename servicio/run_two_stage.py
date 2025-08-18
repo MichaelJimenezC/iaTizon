@@ -7,7 +7,7 @@ from torchvision import transforms
 from src.model import ResNet18
 from src.data import MEAN, STD
 
-BASE = r"C:\dev\servicio\models"
+BASE = r"/Users/user1/Documents/GitHub/iaTizon/servicio/models"
 S1 = os.path.join(BASE, "stage1")
 S2 = os.path.join(BASE, "stage2")
 
