@@ -1,0 +1,548 @@
+[
+  {
+    "img": "C:\\dev\\notebook\\images\\000000545849.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02160617895424366,
+        "not_maize": 0.9783938527107239
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000552929.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02274364046752453,
+        "not_maize": 0.9772562980651855
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000553542.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02046787552535534,
+        "not_maize": 0.9795320630073547
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000555156.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.01967504806816578,
+        "not_maize": 0.980324923992157
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000567916.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.021389007568359375,
+        "not_maize": 0.9786109328269958
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000569249.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02021094411611557,
+        "not_maize": 0.9797890782356262
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000569878.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.020879166200757027,
+        "not_maize": 0.9791208505630493
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\000000570801.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.023087359964847565,
+        "not_maize": 0.9769126176834106
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (35).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.968838095664978,
+        "not_maize": 0.03116193599998951
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.0222102589905262,
+        "tizon_foliar": 0.9777897596359253
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (36).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9745615720748901,
+        "not_maize": 0.0254384595900774
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.020883401855826378,
+        "tizon_foliar": 0.9791166186332703
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (46).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.970106840133667,
+        "not_maize": 0.02989320643246174
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.020369166508316994,
+        "tizon_foliar": 0.9796308279037476
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (55).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9736367464065552,
+        "not_maize": 0.026363208889961243
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.02969393879175186,
+        "tizon_foliar": 0.9703060388565063
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (71).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9743602275848389,
+        "not_maize": 0.025639813393354416
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.02514505572617054,
+        "tizon_foliar": 0.9748548865318298
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (82).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.971566915512085,
+        "not_maize": 0.02843311056494713
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.025891022756695747,
+        "tizon_foliar": 0.9741089940071106
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Blight (89).jpg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9681835770606995,
+        "not_maize": 0.03181641176342964
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.20937544107437134,
+        "tizon_foliar": 0.7906245589256287
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Health (20).jpg",
+    "ok": true,
+    "final": "healthy",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9714464545249939,
+        "not_maize": 0.028553621843457222
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "healthy",
+      "probs": {
+        "healthy": 0.964817225933075,
+        "tizon_foliar": 0.03518274798989296
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Health (34).jpg",
+    "ok": true,
+    "final": "healthy",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9697475433349609,
+        "not_maize": 0.030252445489168167
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "healthy",
+      "probs": {
+        "healthy": 0.9634463787078857,
+        "tizon_foliar": 0.03655358403921127
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Health (37).jpg",
+    "ok": true,
+    "final": "healthy",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9717133641242981,
+        "not_maize": 0.028286607936024666
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "healthy",
+      "probs": {
+        "healthy": 0.9648983478546143,
+        "tizon_foliar": 0.03510171175003052
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Health (4).jpg",
+    "ok": true,
+    "final": "healthy",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9639167785644531,
+        "not_maize": 0.03608327731490135
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "healthy",
+      "probs": {
+        "healthy": 0.9650600552558899,
+        "tizon_foliar": 0.034939978271722794
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\Corn_Health (41).jpg",
+    "ok": true,
+    "final": "healthy",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.9739820957183838,
+        "not_maize": 0.026017911732196808
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "healthy",
+      "probs": {
+        "healthy": 0.9660544395446777,
+        "tizon_foliar": 0.03394554555416107
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\NotMaizeLeaf (64).JPG",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02899879962205887,
+        "not_maize": 0.9710012674331665
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\NotMaizeLeaf (78).JPG",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.023094484582543373,
+        "not_maize": 0.9769055843353271
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\NotMaizeLeaf (96).JPG",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.023341912776231766,
+        "not_maize": 0.976658046245575
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (379).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.032213982194662094,
+        "not_maize": 0.9677860736846924
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (383).jpeg",
+    "ok": true,
+    "final": "tizon_foliar",
+    "stage1": {
+      "pred": "maize",
+      "probs": {
+        "maize": 0.7088630795478821,
+        "not_maize": 0.2911369502544403
+      },
+      "tau": 0.272
+    },
+    "stage2": {
+      "pred": "tizon_foliar",
+      "probs": {
+        "healthy": 0.07206404209136963,
+        "tizon_foliar": 0.9279359579086304
+      },
+      "tau": 0.395
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (385).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.019872449338436127,
+        "not_maize": 0.9801275730133057
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (391).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.018528806045651436,
+        "not_maize": 0.9814712405204773
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (466).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.02311212383210659,
+        "not_maize": 0.9768878221511841
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (477).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.03311185538768768,
+        "not_maize": 0.9668880701065063
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (483).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.031347379088401794,
+        "not_maize": 0.968652606010437
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\azucar__healthy (515).jpeg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.028853746131062508,
+        "not_maize": 0.971146285533905
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\mijo__20210825_0959231_jpg.rf.c01e60f26c7d2bb2b1d0cf34050aba68.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.15566430985927582,
+        "not_maize": 0.8443357348442078
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\mijo__20210825_0959481_jpg.rf.14f17a9fa232622d323346ff22b01f7a.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.03917520493268967,
+        "not_maize": 0.9608248472213745
+      },
+      "tau": 0.272
+    }
+  },
+  {
+    "img": "C:\\dev\\notebook\\images\\mijo__20210825_0959561_jpg.rf.78c56e5081a79d17ae9c809d6dba2065.jpg",
+    "ok": true,
+    "final": "not_maize",
+    "stage1": {
+      "pred": "not_maize",
+      "probs": {
+        "maize": 0.030065272003412247,
+        "not_maize": 0.9699347615242004
+      },
+      "tau": 0.272
+    }
+  }
+]

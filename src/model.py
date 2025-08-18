@@ -39,7 +39,6 @@ class DropPath(nn.Module):
         if not self.training or self.p == 0.0:
             return x
         keep = 1.0 - self.p
-        # Bernoulli mask por batch, broadcast a HxW
         mask = torch.empty((x.shape[0], 1, 1, 1), dtype=x.dtype, device=x.device).bernoulli_(keep)
         return x / keep * mask
 
@@ -59,7 +58,7 @@ class BasicBlock(nn.Module):
         in_planes: int,
         planes: int,
         stride: int = 1,
-        p: float = 0.1,           # dropout2d
+        p: float = 0.1,         
         norm: str = "gn",
         use_se: bool = True,
         drop_path: float = 0.0,
@@ -102,7 +101,6 @@ class BasicBlock(nn.Module):
         if self.downsample is not None:
             identity = self.downsample(x)
 
-        # aplicar stochastic depth al camino residual
         out = self.drop_path(out)
         out = out + identity
         out = self.relu(out)
@@ -123,10 +121,10 @@ class ResNet18(nn.Module):
         self,
         num_classes: int,
         p_fc: float = 0.3,
-        norm: str = "gn",                # "gn" recomendado con batch pequeño
+        norm: str = "gn",               
         use_se: bool = True,
-        p_block: float = 0.10,           # Dropout2d dentro de bloques
-        sd_prob: float = 0.10,           # prob. máx. de DropPath al final
+        p_block: float = 0.10,           
+        sd_prob: float = 0.10,          
         widths: Tuple[int, int, int] = (32, 64, 128),
         blocks_per_stage: Tuple[int, int, int] = (2, 2, 2),
         gn_groups: int = 32,
@@ -140,7 +138,6 @@ class ResNet18(nn.Module):
         self.sd_prob = float(sd_prob)
         self.gn_groups = gn_groups
 
-        # Stem más liviano
         Norm = lambda c: get_norm(norm, c, gn_groups)
         self.stem = nn.Sequential(
             nn.Conv2d(3, widths[0], 3, stride=2, padding=1, bias=False),
@@ -149,20 +146,18 @@ class ResNet18(nn.Module):
             nn.MaxPool2d(3, stride=2, padding=1) if use_stem_pool else nn.Identity(),
         )
 
-        # Progresión lineal de DropPath a través de todos los bloques
         self._total_blocks = sum(blocks_per_stage)
         self._block_idx = 0
 
         self.layer1 = self._make_layer(widths[0], blocks_per_stage[0], stride=1)
         self.layer2 = self._make_layer(widths[1], blocks_per_stage[1], stride=2)
         self.layer3 = self._make_layer(widths[2], blocks_per_stage[2], stride=2)
-        self.layer4 = nn.Identity()  # compatibilidad con código existente
+        self.layer4 = nn.Identity() 
 
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
         self.drop = nn.Dropout(p_fc) if p_fc and p_fc > 0 else nn.Identity()
         self.fc   = nn.Linear(widths[-1], num_classes)
 
-        # Inicialización Kaiming
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
@@ -172,7 +167,6 @@ class ResNet18(nn.Module):
                 nn.init.normal_(m.weight, 0, 0.01); nn.init.zeros_(m.bias)
 
     def _next_drop_path(self) -> float:
-        # lineal de 0 -> sd_prob
         if self._total_blocks <= 1 or self.sd_prob <= 0:
             return 0.0
         frac = self._block_idx / (self._total_blocks - 1)
@@ -203,7 +197,6 @@ class ResNet18(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        # layer4 es Identity (compat)
         x = self.pool(x).flatten(1)
         x = self.drop(x)
         return self.fc(x)

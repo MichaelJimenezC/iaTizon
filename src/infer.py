@@ -30,21 +30,18 @@ def predict_one(model, device, tfm, path, classes, tau=None, tau_pos_class=None)
     try:
         img = Image.open(path).convert("RGB")
     except Exception:
-        # imagen dañada o no legible
         return "__error__", [0.0]*len(classes)
 
     x = tfm(img).unsqueeze(0).to(device, non_blocking=True)
     logits = model(x)
     probs = F.softmax(logits, dim=1)[0].cpu().numpy()
 
-    # Regla general de tau para binario
     if tau is not None and tau_pos_class is not None and len(classes)==2 and (tau_pos_class in classes):
         pos_idx = classes.index(tau_pos_class)
         p_pos   = float(probs[pos_idx])
         pred_idx = pos_idx if p_pos >= tau else 1 - pos_idx
         return classes[pred_idx], probs
 
-    # Fallback a tu regla antigua (stage1 específico)
     if tau is not None and "maize" in classes and "not_maize" in classes and len(classes) == 2:
         i_maize = classes.index("maize")
         i_not   = classes.index("not_maize")
@@ -52,7 +49,6 @@ def predict_one(model, device, tfm, path, classes, tau=None, tau_pos_class=None)
         pred_idx = i_not if p_maize < tau else i_maize
         return classes[pred_idx], probs
 
-    # Argmax normal
     pred_idx = int(probs.argmax())
     return classes[pred_idx], probs
 
@@ -69,22 +65,18 @@ def main():
     ap.add_argument("--tau_pos_class", type=str, default=None, help="Nombre de la clase positiva para --tau (ej. 'maize' o 'tizon_foliar')")
     args = ap.parse_args()
 
-    # Dispositivo y preproc
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     tfm = load_tf(args.img_size)
 
-    # Orden de clases (del dataset)
     train_ds = datasets.ImageFolder(os.path.join(args.data_dir, "train"))
-    classes = train_ds.classes  # p.ej. ['maize','not_maize'] o ['healthy','tizon_foliar'] o 3 clases
+    classes = train_ds.classes 
 
-    # Modelo
     model = ResNet18(num_classes=len(classes)).to(device)
     ckpt = torch.load(args.ckpt, map_location=device)
     state = ckpt["model"] if isinstance(ckpt, dict) and "model" in ckpt else ckpt
     model.load_state_dict(state, strict=False)
     model.eval()
 
-    # Recolectar paths
     if args.img:
         paths = [args.img]
     elif args.dir:
@@ -96,7 +88,6 @@ def main():
         print(f"⚠️  No encontré imágenes en: {args.dir}")
         return
 
-    # CSV dinámico según número de clases
     header = ["path","pred"] + [f"prob_{c}" for c in classes]
     rows = [header]
 
@@ -108,7 +99,6 @@ def main():
             continue
         rows.append([p, pred_name] + [float(probs[i]) for i in range(len(classes))])
 
-    # Guardar
     Path(args.out_csv).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(rows)

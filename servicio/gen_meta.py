@@ -13,8 +13,8 @@ def save_meta(out_dir, classes_from_train, tau):
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--stage", choices=["stage1","stage2"], required=True)
-ap.add_argument("--train_dir", required=True)          # p.ej. C:\dev\dataset_bin\train
-ap.add_argument("--tau", type=float, default=None)     # p.ej. 0.272
+ap.add_argument("--train_dir", required=True)         
+ap.add_argument("--tau", type=float, default=None)     
 args = ap.parse_args()
 
 base = r"C:\dev\servicio\models"

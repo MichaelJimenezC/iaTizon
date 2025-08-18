@@ -43,7 +43,7 @@ def extract_embeddings(files, device="cpu", batch_size=32, img_size=224):
     """
     # Modelo
     m = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
-    backbone = nn.Sequential(*list(m.children())[:-1]).to(device).eval()  # hasta GAP (512x1x1)
+    backbone = nn.Sequential(*list(m.children())[:-1]).to(device).eval() 
 
     tfm = build_transform(img_size)
     embs = []
@@ -55,14 +55,13 @@ def extract_embeddings(files, device="cpu", batch_size=32, img_size=224):
         try:
             img = Image.open(f).convert("RGB")
         except Exception:
-            # imagen corrupta
             continue
         x = tfm(img)
         batch_imgs.append(x)
         batch_meta.append((split, cls, str(f)))
         if len(batch_imgs) == batch_size:
             X = torch.stack(batch_imgs).to(device)
-            z = backbone(X).squeeze(-1).squeeze(-1)  # (B, 512)
+            z = backbone(X).squeeze(-1).squeeze(-1)  
             embs.append(z.cpu().numpy())
             meta.extend(batch_meta)
             batch_imgs, batch_meta = [], []
@@ -85,7 +84,6 @@ def compute_phash_dups(files, max_pairs=20000, ham_thresh=5):
     Detecta casi-duplicados por perceptual hash.
     Devuelve conteo y ejemplos por par de splits (p.ej., train-valid).
     """
-    # Guardamos hashes por (split, cls)
     phashes = []
     for (split, cls, f) in files:
         try:
@@ -95,7 +93,6 @@ def compute_phash_dups(files, max_pairs=20000, ham_thresh=5):
         except Exception:
             continue
 
-    # Índices por split para comparar entre splits (evitar O(n^2) total)
     by_split = defaultdict(list)
     for s, c, fp, h in phashes:
         by_split[s].append((c, fp, h))
@@ -109,13 +106,12 @@ def compute_phash_dups(files, max_pairs=20000, ham_thresh=5):
         B = by_split[b]
         cnt = 0
         examples = []
-        # Submuestreo simple si hay demasiadas combinaciones
         stepA = max(1, len(A) // int(np.sqrt(max_pairs)))
         stepB = max(1, len(B) // int(np.sqrt(max_pairs)))
         for i in range(0, len(A), stepA):
             for j in range(0, len(B), stepB):
                 ha = A[i][2]; hb = B[j][2]
-                ham = ha - hb  # distancia Hamming
+                ham = ha - hb  
                 if ham <= ham_thresh:
                     cnt += 1
                     if len(examples) < 20:
@@ -149,9 +145,7 @@ def summarize_variance(embs, meta):
         if len(_X) < 10 or len(np.unique(_y)) < 2:
             return None
 
-        # pairwise cos distances
         D = pairwise_distances(_X, metric="cosine")
-        # intra/inter
         intra = []
         inter = []
         for c in np.unique(_y):
@@ -166,13 +160,11 @@ def summarize_variance(embs, meta):
         intra_m = float(np.mean(intra)) if intra else float("nan")
         inter_m = float(np.mean(inter)) if inter else float("nan")
 
-        # silhouette
         try:
             sil = float(silhouette_score(_X, _y, metric="cosine"))
         except Exception:
             sil = float("nan")
 
-        # varianza por clase (traza cov)
         var_trace = {}
         for c in np.unique(_y):
             idx_c = np.where(_y == c)[0]
@@ -190,12 +182,10 @@ def summarize_variance(embs, meta):
             "var_trace_per_class": var_trace,
         }
 
-    # Por split
     for s in sorted(np.unique(splits)):
         res = _compute_for(splits == s, s)
         if res: metrics["per_split"][s] = res
 
-    # Global
     res_global = _compute_for(np.ones(len(X), dtype=bool), "global")
     if res_global: metrics["global"] = res_global
 
@@ -212,7 +202,6 @@ def plot_pca(embs, meta, out_path):
     pca = PCA(n_components=2, random_state=0)
     Z = pca.fit_transform(X)
 
-    # Un plot por split
     for s in sorted(np.unique(splits)):
         mask = (splits == s)
         if mask.sum() < 2: 
@@ -230,7 +219,6 @@ def plot_pca(embs, meta, out_path):
         plt.savefig(fp, dpi=150)
         plt.close()
 
-    # Plot global
     plt.figure(figsize=(6,5))
     for c in classes:
         msc = (labels == c)
@@ -263,8 +251,7 @@ def main():
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Recolecta lista de archivos (con límite por clase+split si se pide)
-    per_key = defaultdict(list)  # key = (split, cls)
+    per_key = defaultdict(list)  
     for split, cls, f in iter_images(root):
         per_key[(split, cls)].append((split, cls, f))
 
@@ -293,7 +280,6 @@ def main():
 
     pretty(metrics)
 
-    # Heurísticas simples de interpretación
     def interpret(m):
         if not m or "global" not in m:
             return
@@ -317,7 +303,6 @@ def main():
 
     # ====== Detección de casi-duplicados entre splits ======
     print("\n[INFO] Buscando casi-duplicados (phash) entre splits ...")
-    # Para ahorrar tiempo, usa los mismos archivos ya listados
     phash_results = compute_phash_dups(files, ham_thresh=args.phash_hamming)
     for (a,b), (cnt, examples) in phash_results.items():
         print(f"- {a} vs {b}: {cnt} posibles casi-duplicados (Hamming <= {args.phash_hamming})")

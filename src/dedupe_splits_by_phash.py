@@ -23,15 +23,13 @@ def compute_phashes(files):
     for s, c, f in files:
         try:
             img = Image.open(f).convert("RGB")
-            h = imagehash.phash(img)  # 64-bit hash
+            h = imagehash.phash(img)  
             rows.append({"split":s, "class":c, "path":str(f), "phash":str(h)})
         except Exception as e:
             print(f"[WARN] No se pudo hashear: {f} ({e})")
     return rows
 
 def group_collisions(rows, ham_thresh):
-    # Agrupa por hash aproximado: comparamos todos-vs-todos por hash textual
-    # Optimización simple: agrupar por los primeros 8 hex para reducir comparaciones
     buckets = defaultdict(list)
     for r in rows:
         buckets[r["phash"][:8]].append(r)
@@ -41,7 +39,6 @@ def group_collisions(rows, ham_thresh):
         n = len(lst)
         if n < 2: 
             continue
-        # comparar pares dentro del bucket
         for i in range(n):
             for j in range(i+1, n):
                 ha = imagehash.hex_to_hash(lst[i]["phash"])
@@ -49,13 +46,11 @@ def group_collisions(rows, ham_thresh):
                 ham = ha - hb
                 if ham <= ham_thresh:
                     a, b = lst[i], lst[j]
-                    # normaliza el orden (split priority)
                     collisions.append((a, b, ham))
     return collisions
 
 def solve_sets(collisions, prefer=("train","valid","test")):
     """Construye grupos por archivo y decide qué conservar según prioridad."""
-    # Build disjoint-set over files: cualquier colisión conecta archivos
     parent = {}
     def find(x):
         while parent.get(x, x) != x:
@@ -81,12 +76,9 @@ def solve_sets(collisions, prefer=("train","valid","test")):
         rb = find(b["path"])
         groups[find(a["path"])].append((a,b,ham))
 
-    # Recolectar miembros únicos por grupo
-    members = defaultdict(dict)  # root -> {path: meta}
+    members = defaultdict(dict)  
     for r in set(parent.keys()):
         root = find(r)
-        # buscar meta (split, class) en collisions para este path
-        # para no recorrer mucho, hacemos un índice:
     idx = {}
     for a,b,ham in collisions:
         idx[a["path"]] = a
@@ -97,9 +89,7 @@ def solve_sets(collisions, prefer=("train","valid","test")):
 
     decisions = []
     for root, m in members.items():
-        # elegir keeper por prioridad de split
         keep = None
-        # ordenar candidatos por prefer y luego por clase para estabilidad
         ordered = sorted(m.values(), key=lambda r: (prefer.index(r["split"]) if r["split"] in prefer else 999, r["class"], r["path"]))
         if ordered:
             keep = ordered[0]
@@ -111,7 +101,6 @@ def move_to_quarantine(root: Path, quarantine: Path, to_move, dry=True):
     moved = []
     for r in to_move:
         src = Path(r["path"])
-        # Estructura: _quarantine/<split>/<class>/<filename>
         dst = quarantine / r["split"] / r["class"] / src.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         if dry:

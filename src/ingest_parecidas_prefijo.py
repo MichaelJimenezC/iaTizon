@@ -10,7 +10,7 @@ def link_or_copy(src: Path, dst: Path, prefer_hardlink: bool):
     dst.parent.mkdir(parents=True, exist_ok=True)
     if prefer_hardlink:
         try:
-            os.link(src, dst)  # requiere mismo volumen (NTFS)
+            os.link(src, dst)  
             return
         except Exception:
             pass
@@ -35,7 +35,6 @@ def main():
     dst_root = Path(args.dst_bin)
     prefer_hardlink = not args.copy
 
-    # estructura base
     for split in ["train", "valid", "test"]:
         (dst_root / split / "not_maize").mkdir(parents=True, exist_ok=True)
 
@@ -64,7 +63,6 @@ def main():
 
         for split, lst in splits.items():
             for i, f in enumerate(lst):
-                # prefijo con nombre de subcarpeta
                 dst_name = f"{label}__{f.name}"
                 dst = dst_root / split / "not_maize" / dst_name
                 if args.skip_existing and dst.exists():

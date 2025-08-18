@@ -7,7 +7,7 @@ def link_or_copy(src: Path, dst: Path, prefer_hardlink: bool):
     dst.parent.mkdir(parents=True, exist_ok=True)
     if prefer_hardlink:
         try:
-            os.link(src, dst)            # hardlink (NTFS)
+            os.link(src, dst)            
             return
         except Exception:
             pass
@@ -34,7 +34,6 @@ def build_stage1(src: Path, dst_bin: Path, split: str, neg_extras: Path|None, pr
                 if is_img(f):
                     link_or_copy(f, dst_bin / split / new_cls / f.name, prefer_hardlink)
 
-    # negativos duros opcionales
     if neg_extras and neg_extras.exists():
         for f in neg_extras.rglob("*"):
             if is_img(f):

@@ -14,14 +14,14 @@ def main():
     ap.add_argument("--device", type=str, default="cuda")
     ap.add_argument("--tau", type=float, default=None,
                     help="(Solo binario) Umbral para clase 'maize': si P(maize)<tau => 'not_maize'")
-    ap.add_argument("--save_prefix", type=str, default="")  # opcional para distinguir salidas
+    ap.add_argument("--save_prefix", type=str, default="")  
     args = ap.parse_args()
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     train_ds, val_ds, test_ds, train_loader, val_loader, test_loader = build_loaders(
         args.data_dir, img_size=args.img_size, batch_size=args.batch_size, num_workers=4
     )
-    classes = test_ds.classes  # orden real de indices
+    classes = test_ds.classes  
     C = len(classes)
 
     model = ResNet18(num_classes=C).to(device)
@@ -39,7 +39,6 @@ def main():
             logits = model(x)
             probs = torch.softmax(logits, 1).cpu()
             if C == 2 and args.tau is not None and maize_idx is not None:
-                # Regla con umbral τ: si P(maize)<tau => not_maize
                 p_m = probs[:, maize_idx].numpy()
                 pred = np.where(p_m >= args.tau, maize_idx, 1 - maize_idx)
                 yhat.append(torch.from_numpy(pred))
@@ -53,11 +52,9 @@ def main():
     y_true = torch.cat(ys).numpy()
     y_pred = torch.cat(yhat).numpy()
 
-    # ---- Reporte clásico
     print(classification_report(y_true, y_pred, target_names=classes, digits=4))
     cm = confusion_matrix(y_true, y_pred, labels=list(range(C)))
 
-    # ---- Matriz de confusión (png)
     fig, ax = plt.subplots(figsize=(5, 5))
     im = ax.imshow(cm, interpolation="nearest")
     ax.set_xticks(range(C)); ax.set_yticks(range(C))
@@ -71,16 +68,13 @@ def main():
     plt.savefig(cm_path, dpi=200)
     print("saved:", cm_path)
 
-    # ---- Métricas extra para binario con 'maize' (opcional)
     if C == 2 and maize_idx is not None:
-        # y_true_bin: 1 si es 'maize', 0 si 'not_maize'
         y_true_bin = (y_true == maize_idx).astype(int)
         p_m = np.array(p_maize)
         try:
             roc = roc_auc_score(y_true_bin, p_m)
             ap = average_precision_score(y_true_bin, p_m)
             print(f"ROC-AUC: {roc:.4f} | PR-AUC: {ap:.4f}")
-            # PR curve
             prec, rec, thr = precision_recall_curve(y_true_bin, p_m)
             plt.figure(figsize=(5,5))
             plt.plot(rec, prec)

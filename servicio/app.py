@@ -27,9 +27,6 @@ async def predict(file: UploadFile = File(...)):
     cmd = [sys.executable, str(SCRIPT), "--img", str(tmp)]
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(BASE_DIR))
 
-    # Limpia si quieres:
-    # try: tmp.unlink(missing_ok=True)
-    # except: pass
 
     if proc.returncode != 0:
         return {"ok": False, "error": "runner_failed", "returncode": proc.returncode,
@@ -40,5 +37,4 @@ async def predict(file: UploadFile = File(...)):
         parsed = json.loads(out)
         return parsed
     except Exception:
-        # si stdout no es JSON, te lo regresamos crudo con stderr
         return {"ok": False, "error": "invalid_json", "stdout": out, "stderr": proc.stderr}

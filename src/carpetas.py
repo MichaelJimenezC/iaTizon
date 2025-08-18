@@ -1,9 +1,7 @@
 import os
 
-# Ruta principal de tu dataset
 DATASET_DIR = r"C:\dev\dataset"
 
-# Extensiones de imagen válidas
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
 
 def contar_imagenes_en_carpeta(path):

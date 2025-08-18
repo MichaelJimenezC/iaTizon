@@ -1,9 +1,7 @@
-# juntar.py (reemplaza tu archivo)
 from pathlib import Path
 import json, torch, sys
 
-# ===== Localiza la carpeta "models" correctamente =====
-# 1) junto al script  2) en el cwd/models  3) en cwd/servicio/models (por si lo ejecutas desde la raíz del repo)
+
 candidates = [
     Path(__file__).resolve().parent / "models",
     Path.cwd() / "models",
@@ -43,8 +41,8 @@ def read_meta(dirp: Path):
     return classes, tau
 
 # lee metadatos
-classes1, tau1 = read_meta(S1)   # ['maize','not_maize']
-classes2, tau2 = read_meta(S2)   # ['healthy','tizon_foliar']
+classes1, tau1 = read_meta(S1)   
+classes2, tau2 = read_meta(S2)  
 
 def load_state_dict(pth: Path):
     if not pth.exists():

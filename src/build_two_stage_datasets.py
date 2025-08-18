@@ -10,7 +10,7 @@ def link_or_copy(src: Path, dst: Path, prefer_hardlink: bool):
     dst.parent.mkdir(parents=True, exist_ok=True)
     if prefer_hardlink:
         try:
-            os.link(src, dst)          # hardlink (misma unidad NTFS)
+            os.link(src, dst)          
             return
         except Exception:
             pass
@@ -29,7 +29,6 @@ def copy_split_maize(src_root: Path, dst_bin_root: Path, dst_maize_root: Path,
             if is_img(f):
                 link_or_copy(f, dst_bin_root / split / "maize" / f.name, prefer_hardlink)
 
-    # not_maize (los que ya tenías en el split original)
     nm_dir = src_root / split / "not_maize"
     if nm_dir.exists():
         for f in nm_dir.rglob("*"):
@@ -104,21 +103,17 @@ def main():
     ratios = tuple(float(x) for x in args.ratios.split(","))
     prefer_hardlink = not args.copy
 
-    # Crea estructura base
     for split in ["train","valid","test"]:
         (dst_bin / split / "maize").mkdir(parents=True, exist_ok=True)
         (dst_bin / split / "not_maize").mkdir(parents=True, exist_ok=True)
         (dst_maize / split / "healthy").mkdir(parents=True, exist_ok=True)
         (dst_maize / split / "tizon_foliar").mkdir(parents=True, exist_ok=True)
 
-    # Copia/Hardlink de maíz y not_maize ya existentes por split
     for split in ["train","valid","test"]:
         copy_split_maize(src, dst_bin, dst_maize, split, prefer_hardlink)
 
-    # Reparte negativos extra (dataset/negativos) en not_maize
     split_and_place_negatives(neg_dir, dst_bin, ratios=ratios, seed=args.seed, prefer_hardlink=prefer_hardlink)
 
-    # Resumen
     count_summary(dst_bin, "dataset_bin (maize vs not_maize)")
     count_summary(dst_maize, "dataset_maize_only (healthy vs tizon_foliar)")
     print("\n✅ Listo.")

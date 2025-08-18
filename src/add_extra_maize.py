@@ -10,7 +10,7 @@ def link_or_copy(src: Path, dst: Path, prefer_hardlink=True):
     dst.parent.mkdir(parents=True, exist_ok=True)
     if prefer_hardlink:
         try:
-            os.link(src, dst)  # hardlink (misma unidad NTFS)
+            os.link(src, dst)  
             return
         except Exception:
             pass

@@ -27,7 +27,6 @@ def ok_json(payload):
     sys.exit(0)
 
 # ---------- paths ----------
-# models/ está al lado de este archivo
 MODELS_BASE = (Path(__file__).resolve().parent / "models").resolve()
 BUNDLE_PTH  = MODELS_BASE / "maize_two_stage.pth"
 

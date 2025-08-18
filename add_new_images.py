@@ -2,28 +2,23 @@ import os
 import shutil
 import random
 
-# Paths
 SRC_DIR = r"C:\Users\micha\Downloads\archive (5)\data"
 DST_DIR = r"C:\dev\dataset_maize_only"
 
-# Map source → target class
 CLASS_MAP = {
     "Healthy": "healthy",
     "Blight": "tizon_foliar"
 }
 
-# Split ratios
 TRAIN_RATIO = 0.8
 VALID_RATIO = 0.10
 TEST_RATIO = 0.10
 
-# Crear estructura de carpetas si no existe
 for split in ["train", "valid", "test"]:
     for target_class in CLASS_MAP.values():
         path = os.path.join(DST_DIR, split, target_class)
         os.makedirs(path, exist_ok=True)
 
-# Procesar cada clase mapeada
 for src_class, target_class in CLASS_MAP.items():
     src_path = os.path.join(SRC_DIR, src_class)
     if not os.path.exists(src_path):
