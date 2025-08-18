@@ -3,11 +3,10 @@ import os, sys, json, argparse, traceback
 from pathlib import Path
 
 import torch
-import torch.nn.functional as F
 from PIL import Image, ImageOps
 from torchvision import transforms
 
-# === usa tu propia ResNet y normalización ===
+# === tu ResNet y normalización ===
 from src.model import ResNet18
 from src.data import MEAN, STD
 
@@ -28,35 +27,9 @@ def ok_json(payload):
     sys.exit(0)
 
 # ---------- paths ----------
-# Usa tu ruta absoluta actual
-MODELS_BASE = Path("/Users/user1/Documents/GitHub/iaTizon/servicio/models").resolve()
-S1 = MODELS_BASE / "stage1"
-S2 = MODELS_BASE / "stage2"
-
-S1_PTH = S1 / "stage1_maize_not_v3.pth"
-S2_PTH = S2 / "stage2_maize_tizon.pth"
-
-def load_meta(dir_path: Path):
-    cj = dir_path / "classes.json"
-    if not cj.exists():
-        die_json(f"classes.json no existe en {dir_path}", where=str(dir_path))
-    try:
-        classes = json.loads(cj.read_text(encoding="utf-8"))
-    except Exception as e:
-        die_json("No pude leer classes.json", where=str(dir_path), exc=str(e))
-
-    tau_file = dir_path / "tau.txt"
-    tau = None
-    if tau_file.exists():
-        try:
-            tau = float(tau_file.read_text().strip())
-        except Exception as e:
-            log(f"[WARN] tau.txt malformado en {dir_path}: {e}")
-            tau = None
-    return classes, tau
-
-CLASSES1, TAU1 = load_meta(S1)   # ['maize', 'not_maize'], tau≈0.272
-CLASSES2, TAU2 = load_meta(S2)   # ['healthy','tizon_foliar'], tau≈0.395
+# models/ está al lado de este archivo
+MODELS_BASE = (Path(__file__).resolve().parent / "models").resolve()
+BUNDLE_PTH  = MODELS_BASE / "maize_two_stage.pth"
 
 # ---------- device ----------
 if torch.backends.mps.is_available():
@@ -75,22 +48,32 @@ TFM = transforms.Compose([
     transforms.Normalize(MEAN, STD),
 ])
 
-def load_model(pth: Path, ncls: int):
+def load_bundle(pth: Path):
     if not pth.exists():
-        die_json("Checkpoint .pth no existe", path=str(pth))
+        die_json("Bundle .pth no existe", path=str(pth))
     try:
-        m = ResNet18(num_classes=ncls).to(DEVICE).eval()
-        state = torch.load(str(pth), map_location=DEVICE)
-        state = state.get("model", state)
-        missing, unexpected = m.load_state_dict(state, strict=False)
-        if missing or unexpected:
-            log(f"[WARN] missing_keys={missing}, unexpected_keys={unexpected}")
-        return m
-    except Exception as e:
-        die_json("Error cargando modelo", path=str(pth), exc=str(e))
+        ckpt = torch.load(str(pth), map_location=DEVICE)
 
-M1 = load_model(S1_PTH, len(CLASSES1))
-M2 = load_model(S2_PTH, len(CLASSES2))
+        # metadatos
+        classes1 = ckpt["classes1"]; tau1 = ckpt.get("tau1")
+        classes2 = ckpt["classes2"]; tau2 = ckpt.get("tau2")
+
+        # modelos
+        m1 = ResNet18(num_classes=len(classes1)).to(DEVICE).eval()
+        m2 = ResNet18(num_classes=len(classes2)).to(DEVICE).eval()
+
+        st1 = ckpt["stage1"]
+        st2 = ckpt["stage2"]
+        miss1, unexp1 = m1.load_state_dict(st1, strict=False)
+        miss2, unexp2 = m2.load_state_dict(st2, strict=False)
+        if miss1 or unexp1: log(f"[WARN stage1] missing={miss1} unexpected={unexp1}")
+        if miss2 or unexp2: log(f"[WARN stage2] missing={miss2} unexpected={unexp2}")
+
+        return m1, m2, classes1, tau1, classes2, tau2
+    except Exception as e:
+        die_json("Error leyendo bundle", path=str(pth), exc=str(e), tb=traceback.format_exc())
+
+M1, M2, CLASSES1, TAU1, CLASSES2, TAU2 = load_bundle(BUNDLE_PTH)
 log(f"[stage1] classes={CLASSES1} tau={TAU1}")
 log(f"[stage2] classes={CLASSES2} tau={TAU2}")
 
