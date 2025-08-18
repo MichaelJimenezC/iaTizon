@@ -1,42 +1,44 @@
+# servicio/app.py (fragmento)
 from fastapi import FastAPI, UploadFile, File
-import shutil
-import uuid
-import os
-import subprocess
 from fastapi.middleware.cors import CORSMiddleware
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+import uuid, os, shutil, subprocess, sys, json
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+SCRIPT   = BASE_DIR / "run_two_stage.py"
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,        # o ["*"] mientras desarrollas
-    allow_credentials=True,
-    allow_methods=["*"],          # GET, POST, OPTIONS, etc.
-    allow_headers=["*"],
+    allow_origins=["http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"],
+    allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
-# Carpeta temporal donde se guardan imágenes subidas
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    # Guardar imagen temporal
-    ext = os.path.splitext(file.filename)[1]
-    temp_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}{ext}")
-    with open(temp_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    ext = os.path.splitext(file.filename)[1] or ".jpg"
+    tmp = UPLOAD_DIR / f"{uuid.uuid4()}{ext}"
+    with open(tmp, "wb") as f:
+        shutil.copyfileobj(file.file, f)
 
-    # Ejecutar tu servicio de predicción (run_two_stage.py)
-    result = subprocess.run(
-        ["python", "run_two_stage.py", "--img", temp_path],
-        capture_output=True, text=True
-    )
+    cmd = [sys.executable, str(SCRIPT), "--img", str(tmp)]
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(BASE_DIR))
 
-    # Leer salida
-    output = result.stdout
+    # Limpia si quieres:
+    # try: tmp.unlink(missing_ok=True)
+    # except: pass
 
-    return {"output": output}
+    if proc.returncode != 0:
+        return {"ok": False, "error": "runner_failed", "returncode": proc.returncode,
+                "stdout": proc.stdout, "stderr": proc.stderr}
+
+    out = proc.stdout.strip()
+    try:
+        parsed = json.loads(out)
+        return parsed
+    except Exception:
+        # si stdout no es JSON, te lo regresamos crudo con stderr
+        return {"ok": False, "error": "invalid_json", "stdout": out, "stderr": proc.stderr}
