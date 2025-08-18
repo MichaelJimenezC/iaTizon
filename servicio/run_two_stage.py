@@ -35,8 +35,9 @@ def load_model(pth, ncls):
     m.load_state_dict(state, strict=False)
     return m
 
-M1 = load_model(os.path.join(S1, "model.pth"), len(CLASSES1))
-M2 = load_model(os.path.join(S2, "model.pth"), len(CLASSES2))
+M1 = load_model(os.path.join(S1, "stage1_maize_not_v3.pth"), len(CLASSES1))
+M2 = load_model(os.path.join(S2, "stage2_maize_tizon.pth"), len(CLASSES2))
+
 
 def probs(model, img):
     img = ImageOps.exif_transpose(img).convert("RGB")
